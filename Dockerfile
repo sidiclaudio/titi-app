@@ -1,17 +1,23 @@
+# Base image
 FROM centos:7
 
-LABEL maintainer="cloudspace" 
+# Description
+LABEL Description="Dockerfile to contenerize an apache app"
 
-RUN yum -y update && yum clean all
+# Update all packages
+RUN yum -y update
 
-RUN yum -y install httpd
+# Install apache on the container
+RUN yum install -y httpd
 
-COPY ./webapp/ /var/www/html/
+# Copy the app + dependencies inside the container
+COPY index.html /var/www/html
 
+# Port on which the container should listen on
 EXPOSE 80
 
-# Start httpd at container runtime
-ENTRYPOINT ["/usr/sbin/httpd"]
+# systemctl start/enable httpd
+ENTRYPOINT [ "/usr/sbin/httpd" ]
 
-# Run entrypoint in the background
-CMD ["-D", "FOREGROUND"]
+# Run the container in background
+CMD [ "-D", "FOREGROUND" ]
